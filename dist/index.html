@@ -1,16 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webpack Starter Kit</title>
-</head>
-<body>
-  <img src="./images/turing-logo.png" alt="turing logo">
-  
-  <!-- Do not include the scripts.js or class files here - it is done by the webpack server -->
-  <script src="bundle.js"></script>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpack Starter Kit</title>
+  </head>
+  <body>
+    <h1 class="Overlook-title">The Overlook Hotel</h1>
+    <!-- <img src="./images/turing-logo.png" alt="turing logo"> -->
+    <!-- login page goes here -->
+    <section class="welcome-message-container">
+      <h2 class="welcome-customer-message">Welcome, User!</h2>
+      <!-- add functionality with interpolation for this -->
+    </section>
+    <main class="dashbaord-customer-info-container">
+      <section class="book-container">
+        <h3>Book Your Next Stay</h3>
+        <!-- form details fo here - iteration 2 -->
+      </section>
+      <section class="customer-reservations-container">
+        <h3>Your Reservations</h3>
 
-</body>
+        <!-- <h3>Your Future Reservations</h3> -->
+        <!-- insert reservations - iteration 1 -->
+      </section>
+      <section class="total-cost-container">
+        <h3>Total Cost</h3>
+        <!-- insert total cost info  -->
+      </section>
+    </main>
+  </body>
+  <script src="bundle.js"></script>
 </html>
+  <!-- Do not include the scripts.js or class files here - it is done by the webpack server -->
