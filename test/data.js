@@ -34,7 +34,7 @@ let bookingSampleData = [
   }
 ];
 
-let rooms = [
+let roomSampleData = [
   {
     number: 12,
     roomType: "single room",
@@ -61,4 +61,4 @@ let rooms = [
   }
 ]
 
-export { customers, rooms, bookingSampleData };
+export { customers, roomSampleData, bookingSampleData };

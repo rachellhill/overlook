@@ -1,8 +1,7 @@
 import chai from 'chai';
 const expect = chai.expect;
 import Customer from '../src/classes/Customer';
-import Booking from '../src/classes/Booking';
-import { customers, rooms, bookingSampleData } from './data.js'
+import { customers, roomSampleData, bookingSampleData } from './data.js'
 
 describe('Customer', () => {
 
@@ -11,6 +10,7 @@ describe('Customer', () => {
   let customer3;
   let customersData;
   let bookings;
+  let rooms;
 
   beforeEach(() => {
     customersData = customers;
@@ -18,6 +18,7 @@ describe('Customer', () => {
     customer2 = new Customer(customersData[1]);
     customer3 = new Customer(customersData[2]);
     bookings = bookingSampleData;
+    rooms = roomSampleData;
   });
 
   it('should be a function', () => {
@@ -69,5 +70,15 @@ describe('Customer', () => {
 
   it('should let the customer know if they do not have any bookings', () => {
     expect(customer3.getCustomerBookings(bookings)).to.equal(`You do not have any reservations with the Overlook Hotel`);
+  })
+
+  it('should calculate total cost that a customer has spent on rooms at the Overlook', () => {
+    customer1.getCustomerBookings(bookings)
+    customer1.calculateTotalSpent(rooms)
+    expect(customer1.totalSpent).to.equal(172.09);
+
+    customer2.getCustomerBookings(bookings)
+    customer2.calculateTotalSpent(rooms)
+    expect(customer2.totalSpent).to.equal(575.06);
   })
 })

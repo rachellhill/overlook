@@ -3,6 +3,7 @@ class Customer {
     this.id = customerInfo.id;
     this.name = customerInfo.name;
     this.roomsBooked = [];
+    this.totalSpent = 0;
   }
 
   getCustomerBookings(bookingData) {
@@ -15,8 +16,18 @@ class Customer {
       return `You do not have any reservations with the Overlook Hotel`;
     }
   }
-  // create a method that takes in the bookings array and iterate over it to check if the bookingID for user matches this users ID, if they equal eachother, push that trip into an array which should be a property of this class
-    // how do I get the booking data? can I just import it into this file and check it/ iterate over it?
+
+  calculateTotalSpent(roomData) {
+    this.totalSpent = this.roomsBooked.reduce((acc, roomBooked) => {
+      let filterRooms = roomData.forEach(room => {
+        if (roomBooked.roomNumber === room.number) {
+          acc += room.costPerNight;
+        }
+      })
+      return acc
+    }, 0)
+    return this.totalSpent;
+  }
 }
 
 
