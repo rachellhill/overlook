@@ -4,6 +4,8 @@ class Customer {
     this.name = customerInfo.name;
     this.roomsBooked = [];
     this.totalSpent = 0;
+    // this.previousTrips = [];
+    // this.upcomingTrips = [];
   }
 
   getCustomerBookings(bookingData) {
@@ -28,6 +30,15 @@ class Customer {
     }, 0)
     return this.totalSpent;
   }
+
+  // getPreviousTrips() {
+  //   const today = Date.now()
+  //   console.log(today);
+  // }
+
+  // getUpcomingTrips() {
+  //
+  // }
 }
 
 

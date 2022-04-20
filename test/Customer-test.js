@@ -81,4 +81,10 @@ describe('Customer', () => {
     customer2.calculateTotalSpent(rooms)
     expect(customer2.totalSpent).to.equal(575.06);
   })
+
+  // it('should know if their booking is in the past or present', () => {
+  //   customer1.getCustomerBookings(bookings)
+  //   customer1.getPreviousTrips()
+  //   expect(customer1)
+  // })
 })
