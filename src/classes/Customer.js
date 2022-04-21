@@ -3,6 +3,9 @@ class Customer {
     this.id = customerInfo.id;
     this.name = customerInfo.name;
     this.roomsBooked = [];
+    // rooms booked by customer
+    this.allRooms = [];
+    // all rooms in the data set from API so I can use it on the DOM
     this.totalSpent = 0;
     // this.previousTrips = [];
     // this.upcomingTrips = [];
@@ -30,15 +33,29 @@ class Customer {
     }, 0)
     return this.totalSpent;
   }
+  // round method
 
-  // getPreviousTrips() {
-  //   const today = Date.now()
-  //   console.log(today);
-  // }
-
-  // getUpcomingTrips() {
-  //
-  // }
+  getAllRooms(roomData) {
+    const result = this.roomsBooked.reduce((acc, booking) => {
+      roomData.forEach((room) => {
+        if (booking.roomNumber === room.number) {
+          const roomObj = {
+            number: room.number,
+            roomType: room.roomType,
+            bidet: room.bidet,
+            bedSize: room.bedSize,
+            numBeds: room.numBeds,
+            costPerNight: room.costPerNight,
+            date: booking.date
+          }
+          acc.push(roomObj)
+        }
+      })
+      return acc
+    }, []);
+      this.allRooms = result
+      return result;
+  }
 }
 
 
