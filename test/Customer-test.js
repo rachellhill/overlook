@@ -77,6 +77,7 @@ describe('Customer', () => {
     customer1.calculateTotalSpent(rooms)
     expect(customer1.totalSpent).to.equal(172.09);
 
+    console.log()
     customer2.getCustomerBookings(bookings)
     customer2.calculateTotalSpent(rooms)
     expect(customer2.totalSpent).to.equal(575.06);
@@ -112,6 +113,33 @@ describe('Customer', () => {
     expect(customer3.allRooms).to.deep.equal([])
   })
 
+  it('should sort dates of booked rooms', () => {
+    customer2.getCustomerBookings(bookings);
+    customer2.getAllRooms(rooms);
+    customer2.sortDates();
+    expect(customer2.sortedBookings).to.deep.equal([
+      {
+        number: 9,
+        roomType: "single room",
+        bidet: true,
+        bedSize: "queen",
+        numBeds: 1,
+        costPerNight: 200.39,
+        date: "2022/02/11"
+      },
+      {
+        number: 19,
+        roomType: "single room",
+        bidet: false,
+        bedSize: "queen",
+        numBeds: 1,
+        costPerNight: 374.67,
+        date: "2022/01/24"
+      }
+    ])
+    // console.log(customer3.allRooms)
+    // expect(customer3.allRooms).to.deep.equal([])
+  })
   // it('should know if their booking is in the past or present', () => {
   //   customer1.getCustomerBookings(bookings)
   //   customer1.getPreviousTrips()
