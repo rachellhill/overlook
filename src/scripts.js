@@ -41,7 +41,7 @@ const getApiData = () => {
     instantiateCustomer(50)
     renderBookings();
     renderTotalCost();
-    // will need to move this bc of login
+    // will need to move this bc of login - will eventually be on the submit button when submitting username and password
   });
 
 };
@@ -55,7 +55,9 @@ const getApiData = () => {
 const renderBookings = () => {
   currentCustomer.getCustomerBookings(bookingsData)
   currentCustomer.getAllRooms(roomsData)
-  currentCustomer.allRooms.forEach(room => {
+  currentCustomer.sortDates();
+  currentCustomer.sortedBookings.forEach(room => {
+    const total = currencyFormatter.format(room.costPerNight);
     customerBookings.innerHTML += `
     <section class="booking-card">
     <p class="date">${room.date}</p>
@@ -66,17 +68,24 @@ const renderBookings = () => {
       <li class="feature-list">Bidet: ${room.bidet}</li>
       <li class="feature-list">Bidet: ${room.number}</li>
     </ul>
-    <p class="room-cost">Cost per night: $${room.costPerNight}</p>
+    <p class="room-cost">Cost per night: ${total}</p>
     </section>
     `
   })
 }
 
+const currencyFormatter = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD'
+})
+
 const renderTotalCost = () => {
   currentCustomer.getCustomerBookings(bookingsData)
-  currentCustomer.calculateTotalSpent(roomsData)
+  let getCost = currentCustomer.calculateTotalSpent(roomsData)
+  // let roundCost = getCost.toFixed(2)
+  const totalDisplay = currencyFormatter.format(getCost)
   totalCost.innerHTML += `
-    <h5 class="total-spend">${currentCustomer.totalSpent}</h5>`
+    <h5 class="total-spend">${totalDisplay}</h5>`
 }
 // need to access roomsBooked in the customer class and iterate over each to create an HTML element for customerBookings
 // function - find bidet
