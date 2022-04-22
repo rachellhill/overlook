@@ -72,6 +72,7 @@ const renderBookings = () => {
     </section>
     `
   })
+  console.log(currentCustomer.sortedBookings.length)
 }
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
