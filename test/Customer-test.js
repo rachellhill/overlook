@@ -82,6 +82,36 @@ describe('Customer', () => {
     expect(customer2.totalSpent).to.equal(575.06);
   })
 
+  it('should return a total cost of 0 if a user has no bookings with the hotel', () => {
+    customer3.getCustomerBookings(bookings)
+    customer3.calculateTotalSpent(rooms)
+    expect(customer3.totalSpent).to.equal(0);
+  })
+
+  it('should have a method that stores all of the rooms a customer has booked', () => {
+    customer1.getCustomerBookings(bookings);
+    customer1.getAllRooms(rooms);
+    expect(customer1.allRooms).to.deep.equal([
+      {
+        number: 12,
+        roomType: "single room",
+        bidet: false,
+        bedSize: "twin",
+        numBeds: 2,
+        costPerNight: 172.09,
+        date: "2022/02/05"
+      }
+    ])
+  })
+  // should add a bookingID
+
+  it('should ensure that a customer that has no bookings has no rooms', () => {
+    customer3.getCustomerBookings(bookings);
+    customer3.getAllRooms(rooms);
+    // console.log(customer3.allRooms)
+    expect(customer3.allRooms).to.deep.equal([])
+  })
+
   // it('should know if their booking is in the past or present', () => {
   //   customer1.getCustomerBookings(bookings)
   //   customer1.getPreviousTrips()
