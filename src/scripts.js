@@ -8,6 +8,8 @@ import { customersPromise, bookingsPromise, roomsPromise } from "./apiCalls"
 
 let customerBookings = document.querySelector('.customer-reservations-container');
 let totalCost = document.querySelector('.total-cost-container');
+let dateInput = document.querySelector(".date-input");
+let showAvailableRoomsBtn = document.querySelector(".show-rooms-btn");
 
 
 // ----------------- GLOBAL VARIABLES ----------------- //
@@ -16,11 +18,7 @@ let customersData = [];
 let bookingsData = [];
 let roomsData = [];
 let currentCustomer;
-
-
-// ----------------- EVENT LISTENERS ----------------- //
-
-window.onload = (event) => getApiData();
+let selectedDate;
 
 // ----------------- functions ----------------- //
 const getApiData = () => {
@@ -43,7 +41,6 @@ const getApiData = () => {
     renderTotalCost();
     // will need to move this bc of login - will eventually be on the submit button when submitting username and password
   });
-
 };
 
 // const showData = () => {
@@ -51,6 +48,31 @@ const getApiData = () => {
 //   console.log("outside bookings", bookingsData)
 //   console.log("outside rooms", roomsData)
 // }
+
+// showAvailable rooms
+// get the date from query selector -> date input
+// ensure the min of today's date -> use get date and set today as min in HTML element
+// replaceAll('-', '/') -> dates are diff
+
+//check booking date - iterate over bookingsData to check if date input !== booking.date -> filter
+
+// reduce over filtered array and forEach over roomData to check if booking.room === room.numer && filtered array does not already include that room, then push to acc
+
+// if dates match, room is not available
+  // if room numbers match, remove from acc (pop?)
+
+const findAvailableRooms = (bookingsData, roomsData) => {
+  selectedDate = dateInput.value.replaceAll('-', '/')
+
+  const bookedRooms = bookingsData.filter((booking) => {
+    return booking.date === selectedDate
+  }).map(booking => booking.roomNumber)
+  // console.log(bookedRooms)
+
+  const availableRooms = roomsData.filter(room => (!bookedRooms.includes(room.number)))
+  console.log(availableRooms)
+}
+
 
 const renderBookings = () => {
   currentCustomer.getCustomerBookings(bookingsData)
@@ -109,3 +131,13 @@ setTimeout(() => {console.log(currentCustomer)}, 5000);
   // match up id from login to the id in customersData and use that to set new customer object which will instantiate our current customer.
   // parseint to a number
 // currentcustomer.allrooms = new Room()
+
+// ----------------- EVENT LISTENERS ----------------- //
+
+window.onload = (event) => getApiData();
+showAvailableRoomsBtn.addEventListener("click", (e) => {
+  // console.log(bookingsData)
+  findAvailableRooms(bookingsData, roomsData);
+  console.log("rooms data length", roomsData.length)
+  event.preventDefault();
+})
