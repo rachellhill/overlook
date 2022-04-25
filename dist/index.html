@@ -14,21 +14,42 @@
       <h2 class="welcome-customer-message">Welcome, User!</h2>
       <!-- add functionality with interpolation for this -->
     </section>
-    <main class="dashbaord-customer-info-container">
-      <section class="book-container">
-        <h3>Book Your Next Stay</h3>
-        <!-- form details fo here - iteration 2 -->
-      </section>
-      <section class="customer-reservations-container">
-        <h3>Your Reservations</h3>
+    <main class="main-wrapper">
+      <div class="dashboard">
+        <section class="book-container">
+          <h3>Book Your Next Stay</h3>
+          <form id="bookingForm" name="bookingForm">
+            <div>
+              <label for="booking-date">When will you be arriving?</label>
+              <input class="date-input" type="date" required>
+              <button class="show-rooms-btn">Find Available Rooms</button>
 
-        <!-- <h3>Your Future Reservations</h3> -->
-        <!-- insert reservations - iteration 1 -->
-      </section>
-      <section class="total-cost-container">
-        <h3>Total Cost</h3>
-        <!-- insert total cost info  -->
-      </section>
+              <div class="room-filter hidden">
+                <label for="room-type-slection">choose a room type:</label>
+                <select id="select1" name="room-type-selection" class="room-type-selection">
+                  <option class="any" value="any">any</option>
+                  <option class="junior-suite" value="junior suite">junior suite</option>
+                  <option class="residential-suite" value="residential suite">residential suite</option>
+                  <option class="single-room" value="single room">single room</option>
+                  <option class="suite" value="suite">suite</option>
+                </select>
+              </div>
+              <section class="show-available-rooms-section"></section>
+              <button class="submit-booking-btn">Confirm Booking</button>
+            </div>
+          </form>
+          <!-- form details fo here - iteration 2 -->
+        </section>
+        <div class="customer-reservations-container">
+          <h3>Your Reservations</h3>
+          <!-- <h3>Your Future Reservations</h3> -->
+          <!-- insert reservations - iteration 1 -->
+        </div>
+        <section class="total-cost-container">
+          <h3>Total Cost</h3>
+          <!-- insert total cost info  -->
+        </section>
+      </div>
     </main>
   </body>
   <script src="bundle.js"></script>
