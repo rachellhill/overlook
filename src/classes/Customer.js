@@ -5,7 +5,6 @@ class Customer {
     this.roomsBooked = [];
     // rooms booked by customer
     this.allRooms = [];
-    // all rooms in the data set from API so I can use it on the DOM
     this.totalSpent = 0;
     this.sortedBookings = [];
     // this.previousTrips = [];
@@ -14,7 +13,7 @@ class Customer {
 
   getCustomerBookings(bookingData) {
     bookingData.forEach(booking => {
-      if (this.id === booking.userID) {
+      if (this.id === booking.userID && !this.roomsBooked.includes(booking)) {
         this.roomsBooked.push(booking)
       }
     })
@@ -55,6 +54,7 @@ class Customer {
       return acc
     }, []);
       this.allRooms = result
+      console.log(result)
       return result;
   }
 
@@ -76,29 +76,14 @@ class Customer {
       let result = sortedDates.reduce((acc, date) => {
         this.allRooms.forEach(room => {
           let bookingDate = Date.parse(room.date)
-          if (date === bookingDate) {
+          if (date === bookingDate && !acc.includes(room)) {
             acc.push(room)
           }
         })
         return acc
       }, [])
       this.sortedBookings = result;
-      // referencing order of sorted dates. in all rooms booked, does this date match
-        // if yes - return an array of ordered dates
-    // this.allRooms.sort((a, b) => {
-    //   let bookingDate = Date.parse(room.date);
-    //   return b.bookingDate - a.bookingDate
   }
-  // reduce over allRooms to get a list of sorted and parsed dates
-    // iterate over the result array and look at each date in the allRooms array
-      // inside of it were going to another reduce and a forEach within
-        // external is iterating over sorted and parsed days
-        // forEach iterating over all roomSampleData
-          // if the parsed date matches === parsed date
-            // push it
-
-  // get dates of each booking and sort through from biggest to least (past to present)
-    // all dates in booking go year / month / day
 }
 
 
