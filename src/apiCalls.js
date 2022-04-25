@@ -1,3 +1,5 @@
+import { currentCustomer, refreshBookings } from "./scripts"
+
 const getAllCustomers = () => {
   return fetch('http://localhost:3001/api/v1/customers')
     // add if statement? response.ok?
@@ -17,44 +19,38 @@ const getAllRooms = () => {
     .catch(error => console.log(error))
 }
 
-// const addBooking = (newBooking) => {
-//   fetch('//localhost:3001/api/v1/bookings', {
-//     method: 'POST',
-//     headers: {"Content-Type": "application/json"},
-//     body: JSON.stringify(newBooking)
-//   })
-//   .then(response => {
-//     if (!response.ok) {
-//       throw Error()
-//     } else {
-//       return response.json(response.statusText)
-//     }
-//   })
-// }
+const addBooking = (newBooking) => {
+  fetch('//localhost:3001/api/v1/bookings', {
+    method: 'POST',
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(newBooking)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw Error()
+    } else {
+      return response.json(response.statusText)
+    }
+  })
+  .then(response => {
+    let id = currentCustomer.id;
+    refreshBookings(id)
+    console.log('success')
+  })
+  .catch(error => {
+    console.log(error)
+    // showError('There was an issue submitting your booking. Try again!')
+  })
+};
 
-
-// const addIngredients = (newIngredient) => {
-//   fetch("http://localhost:3001/api/v1/users", {
-//     method: 'POST',
-//     headers: { 'Content-Type': 'application/json' },
-//     body: JSON.stringify(newIngredient)
-//   })
-//   .then(response => {
-//     if (!response.ok) {
-//       throw Error()
-//     } else {
-//       return response.json(response.statusText)
-//     }
-//   })
-//   .then(response => refreshPantry(newIngredient.userID))
-//   .catch(error => {
-//     showError('There was an issue adding this ingredient. Try again!')
-//   });
-// };
-
+const getPromise = (url) => {
+  return fetch(url)
+  .then(response => response.json())
+  .catch(err => console.log("error"));
+};
 
 let customersPromise = getAllCustomers();
 let bookingsPromise = getAllBookings();
 let roomsPromise = getAllRooms();
 
-export { customersPromise, bookingsPromise, roomsPromise };
+export { customersPromise, bookingsPromise, roomsPromise, addBooking, getAllBookings, getPromise };
