@@ -13,6 +13,8 @@ let showAvailableRoomsBtn = document.querySelector(".show-rooms-btn");
 let showAvailableRooms = document.querySelector(".show-available-rooms-section");
 let filterRoomsBtn = document.querySelector('.room-filter');
 let filterOptions = document.querySelector('.room-type-selection');
+let confirmBookingBtn = document.querySelector(".submit-booking-btn");
+let bookingConfirmationPage = document.querySelector(".show-booking-info");
 
 
 // ----------------- GLOBAL VARIABLES ----------------- //
@@ -22,6 +24,7 @@ let bookingsData = [];
 let roomsData = [];
 let currentCustomer;
 let selectedDate;
+let selectedRoom;
 let availableRooms;
 
 // ----------------- functions ----------------- //
@@ -67,7 +70,6 @@ const renderBookings = () => {
     </section>
     `
   });
-  console.log(currentCustomer.sortedBookings.length)
 };
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -102,34 +104,45 @@ const findAvailableRooms = (bookingsData, roomsData) => {
   const bookedRooms = bookingsData.filter((booking) => {
     return booking.date === selectedDate
   }).map(booking => booking.roomNumber)
-  console.log(bookedRooms)
   availableRooms = roomsData.filter(room => (!bookedRooms.includes(room.number)))
-  console.log(availableRooms)
 
-  availableRooms.forEach(availableRoom => {
+  availableRooms.forEach(room => {
     showAvailableRooms.innerHTML += `
-    <button class="available-room" id="${availableRoom.number}">
-      <h5>${availableRoom.roomType}</h5>
-      <p>Bed Size: ${availableRoom.bedSize}</p>
-      <p>Bed Size: ${availableRoom.costPerNight}</p>
-    </button>
+    <div class="available-room">
+      <button id="${room.number}">
+        <h5>${room.roomType}</h5>
+        <p>Bed Size: ${room.bedSize}</p>
+        <p>Number of Beds: ${room.numBeds}</p>
+        <p>Cost: ${room.costPerNight}</p>
+      </button>
+    </div>
     `
   })
 };
 
-// if an option is selected, filter available rooms to show only one of those options?
+const showSelectedBooking = (id) => {
+  selectedRoom = availableRooms.find(room => {
+    return id === room.number.toString();
+  })
+  console.log("SELECTED ROOM", selectedRoom)
+  bookingConfirmationPage.innerHTML += `
+    <h6>Your reservation details: ${selectedRoom.roomType}</h6>
+      <p>Bed size: ${selectedRoom.bedSize}</p>
+      <p>Bidet: ${selectedRoom.bidet}</p>
+      <p>Number of Beds: ${selectedRoom.numBeds}</p>
+    <h7>TOTAL: ${selectedRoom.costPerNight}</h7>
+  `
+}
 
-// compare the joined option value to the classname and then if true, filter the array
-// const renderFilteredData = () => {
-//   let filter = event.target.className
-
-  // e.target.classname
-  // new array of smusheded roomTypes
-  // forEach over available rooms roomTypes
-    // if e.target.classname === to room.roomtype.join('')
-      // push into a new array
-  // iterate over available rooms and return room.type.includes(joined string)
-// }
+const createBooking = () => {
+  let newBooking = {
+    userID: currentCustomer.id,
+    date: selectedDate,
+    roomNumber: selectedRoom.number
+    // selectedRoom.number since selectedRoom is an object above
+  }
+  return newBooking
+}
 
 const showElement = (element) => {
   element.classList.remove('hidden');
@@ -147,12 +160,14 @@ setTimeout(() => {console.log(currentCustomer)}, 5000);
 
 // ----------------- EVENT LISTENERS ----------------- //
 
-window.onload = (event) => getApiData();
+window.onload = (event) => {
+  getApiData();
+  hideElement(confirmBookingBtn);
+}
 showAvailableRoomsBtn.addEventListener("click", (e) => {
   findAvailableRooms(bookingsData, roomsData);
   showElement(filterRoomsBtn);
   hideElement(showAvailableRoomsBtn);
-  // console.log("rooms data length", roomsData.length)
   event.preventDefault();
 });
 
@@ -167,18 +182,31 @@ filterOptions.addEventListener("change", (e) => {
   showAvailableRooms.innerHTML = '';
   availableRoomsByFilter.forEach(room => {
     showAvailableRooms.innerHTML += `
-      <button class="available-room" id="${room.number}">
-        <h5>${room.roomType}</h5>
-        <p>Bed Size: ${room.bedSize}</p>
-        <p>Number of Beds: ${room.numBeds}</p>
-        <p>Cost: ${room.costPerNight}</p>
-      </button>
+      <div class="available-room">
+        <button id="${room.number}">
+          <h5>${room.roomType}</h5>
+          <p>Bed Size: ${room.bedSize}</p>
+          <p>Number of Beds: ${room.numBeds}</p>
+          <p>Cost: ${room.costPerNight}</p>
+        </button>
+      </div>
     `
-  })
-// REFACTOR: make a function and pass in e as param
-  // invoke function with e in event listener ln 168 - 175 in another function
-  console.log(availableRoomsByFilter)
+  });
 });
 
-// click on room - give them the same classList
-  // all injected room buttons have the same className
+showAvailableRooms.addEventListener('click', (e) => {
+  event.preventDefault()
+  if (e.target.parentElement.classList.contains("available-room")) {
+    showSelectedBooking(e.target.id);
+  };
+  hideElement(showAvailableRooms);
+  hideElement(filterRoomsBtn);
+  showElement(confirmBookingBtn);
+});
+
+confirmBookingBtn.addEventListener('click', (e) => {
+  event.preventDefault();
+  let booking = createBooking()
+  console.log(booking);
+});
+// invoking createBooking as arg;
