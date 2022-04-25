@@ -2,7 +2,7 @@
 import './css/styles.css';
 import './images/turing-logo.png'
 import Customer from './classes/Customer'
-import { customersPromise, bookingsPromise, roomsPromise } from "./apiCalls"
+import { customersPromise, bookingsPromise, roomsPromise, addBooking, getAllBookings, getPromise } from "./apiCalls"
 
 // ----------------- QUERY SELECTORS ----------------- //
 
@@ -13,6 +13,8 @@ let showAvailableRoomsBtn = document.querySelector(".show-rooms-btn");
 let showAvailableRooms = document.querySelector(".show-available-rooms-section");
 let filterRoomsBtn = document.querySelector('.room-filter');
 let filterOptions = document.querySelector('.room-type-selection');
+let confirmBookingBtn = document.querySelector(".submit-booking-btn");
+let bookingConfirmationPage = document.querySelector(".show-booking-info");
 
 
 // ----------------- GLOBAL VARIABLES ----------------- //
@@ -22,6 +24,7 @@ let bookingsData = [];
 let roomsData = [];
 let currentCustomer;
 let selectedDate;
+let selectedRoom;
 let availableRooms;
 
 // ----------------- functions ----------------- //
@@ -41,6 +44,7 @@ const getApiData = () => {
     })
     // showData();
     instantiateCustomer(50)
+    currentCustomer.getCustomerBookings(bookingsData)
     renderBookings();
     renderTotalCost();
     // will need to move this bc of login - will eventually be on the submit button when submitting username and password
@@ -48,9 +52,11 @@ const getApiData = () => {
 };
 
 const renderBookings = () => {
-  currentCustomer.getCustomerBookings(bookingsData)
+  console.log("all bookings", currentCustomer.roomsBooked)
+  console.log('all rooms', currentCustomer.allRooms)
   currentCustomer.getAllRooms(roomsData)
   currentCustomer.sortDates();
+  console.log("SORTED", currentCustomer.sortedBookings)
   currentCustomer.sortedBookings.forEach(room => {
     const total = currencyFormatter.format(room.costPerNight);
     customerBookings.innerHTML += `
@@ -67,7 +73,6 @@ const renderBookings = () => {
     </section>
     `
   });
-  console.log(currentCustomer.sortedBookings.length)
 };
 
 const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -76,7 +81,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 });
 
 const renderTotalCost = () => {
-  currentCustomer.getCustomerBookings(bookingsData)
+  // currentCustomer.getCustomerBookings(bookingsData)
   let getCost = currentCustomer.calculateTotalSpent(roomsData)
   // let roundCost = getCost.toFixed(2)
   const totalDisplay = currencyFormatter.format(getCost)
@@ -102,34 +107,45 @@ const findAvailableRooms = (bookingsData, roomsData) => {
   const bookedRooms = bookingsData.filter((booking) => {
     return booking.date === selectedDate
   }).map(booking => booking.roomNumber)
-  console.log(bookedRooms)
   availableRooms = roomsData.filter(room => (!bookedRooms.includes(room.number)))
-  console.log(availableRooms)
 
-  availableRooms.forEach(availableRoom => {
+  availableRooms.forEach(room => {
     showAvailableRooms.innerHTML += `
-    <button class="available-room" id="${availableRoom.number}">
-      <h5>${availableRoom.roomType}</h5>
-      <p>Bed Size: ${availableRoom.bedSize}</p>
-      <p>Bed Size: ${availableRoom.costPerNight}</p>
-    </button>
+    <div class="available-room">
+      <button id="${room.number}">
+        <h5>${room.roomType}</h5>
+        <p>Bed Size: ${room.bedSize}</p>
+        <p>Number of Beds: ${room.numBeds}</p>
+        <p>Cost: ${room.costPerNight}</p>
+      </button>
+    </div>
     `
   })
 };
 
-// if an option is selected, filter available rooms to show only one of those options?
+const showSelectedBooking = (id) => {
+  selectedRoom = availableRooms.find(room => {
+    return id === room.number.toString();
+  })
+  console.log("SELECTED ROOM", selectedRoom)
+  bookingConfirmationPage.innerHTML += `
+    <h6>Your reservation details: ${selectedRoom.roomType}</h6>
+      <p>Bed size: ${selectedRoom.bedSize}</p>
+      <p>Bidet: ${selectedRoom.bidet}</p>
+      <p>Number of Beds: ${selectedRoom.numBeds}</p>
+    <h7>TOTAL: ${selectedRoom.costPerNight}</h7>
+  `
+}
 
-// compare the joined option value to the classname and then if true, filter the array
-// const renderFilteredData = () => {
-//   let filter = event.target.className
-
-  // e.target.classname
-  // new array of smusheded roomTypes
-  // forEach over available rooms roomTypes
-    // if e.target.classname === to room.roomtype.join('')
-      // push into a new array
-  // iterate over available rooms and return room.type.includes(joined string)
-// }
+const createBooking = () => {
+  let newBooking = {
+    userID: currentCustomer.id,
+    date: selectedDate,
+    roomNumber: selectedRoom.number
+    // selectedRoom.number since selectedRoom is an object above
+  };
+  return newBooking
+};
 
 const showElement = (element) => {
   element.classList.remove('hidden');
@@ -145,14 +161,54 @@ setTimeout(() => {console.log(currentCustomer)}, 5000);
   // parseint to a number
 // currentcustomer.allrooms = new Room()
 
+const showBookingDate = () => {
+  showElement(showAvailableRoomsBtn);
+  hideElement(showAvailableRooms);
+  hideElement(confirmBookingBtn);
+  hideElement(bookingConfirmationPage);
+}
+
+const refreshBookings = (id) => {
+  Promise.all([
+    getPromise('//localhost:3001/api/v1/bookings')
+  ]).then(data => {
+    console.log("BEFORE", bookingsData)
+    bookingsData = []
+    console.log("MIDDLE", bookingsData)
+    data[0].bookings.forEach(booking => {
+      bookingsData.push(booking);
+    })
+    refreshDataInstances(data, id)
+    console.log("AFTER", bookingsData)
+  });
+};
+
+const refreshDataInstances = (data, id) => {
+  // console.log(data, id)
+  const findCustomer = () => {
+    customersData.forEach(customer => {
+      if (customer.id === id) {
+        currentCustomer.allRooms = [];
+        currentCustomer.roomsBooked = [];
+        currentCustomer.sortedBookings = [];
+        currentCustomer.getCustomerBookings(bookingsData)
+        // console.log("GET BOOKINGS", )
+      };
+    });
+  };
+  findCustomer();
+};
+
 // ----------------- EVENT LISTENERS ----------------- //
 
-window.onload = (event) => getApiData();
+window.onload = (event) => {
+  getApiData();
+  hideElement(confirmBookingBtn);
+}
 showAvailableRoomsBtn.addEventListener("click", (e) => {
   findAvailableRooms(bookingsData, roomsData);
   showElement(filterRoomsBtn);
   hideElement(showAvailableRoomsBtn);
-  // console.log("rooms data length", roomsData.length)
   event.preventDefault();
 });
 
@@ -167,18 +223,50 @@ filterOptions.addEventListener("change", (e) => {
   showAvailableRooms.innerHTML = '';
   availableRoomsByFilter.forEach(room => {
     showAvailableRooms.innerHTML += `
-      <button class="available-room" id="${room.number}">
-        <h5>${room.roomType}</h5>
-        <p>Bed Size: ${room.bedSize}</p>
-        <p>Number of Beds: ${room.numBeds}</p>
-        <p>Cost: ${room.costPerNight}</p>
-      </button>
+      <div class="available-room">
+        <button id="${room.number}">
+          <h5>${room.roomType}</h5>
+          <p>Bed Size: ${room.bedSize}</p>
+          <p>Number of Beds: ${room.numBeds}</p>
+          <p>Cost: ${room.costPerNight}</p>
+        </button>
+      </div>
     `
-  })
-// REFACTOR: make a function and pass in e as param
-  // invoke function with e in event listener ln 168 - 175 in another function
-  console.log(availableRoomsByFilter)
+  });
 });
 
-// click on room - give them the same classList
-  // all injected room buttons have the same className
+showAvailableRooms.addEventListener('click', (e) => {
+  event.preventDefault()
+  if (e.target.parentElement.classList.contains("available-room")) {
+    showSelectedBooking(e.target.id);
+  };
+  hideElement(showAvailableRooms);
+  hideElement(filterRoomsBtn);
+  showElement(confirmBookingBtn);
+  // console.log("BEFORE", bookingsData)
+});
+
+confirmBookingBtn.addEventListener('click', (e) => {
+  event.preventDefault();
+  let booking = createBooking();
+  hideElement(confirmBookingBtn);
+  bookingConfirmationPage.innerHTML = '';
+  bookingConfirmationPage.innerHTML +=
+  `<h6>Your reservation is booked!<h6/>`
+  addBooking(booking);
+  console.log("before render bookings", bookingsData)
+  setTimeout(() => {
+    customerBookings.innerHTML = '';
+    renderBookings();
+    totalCost.innerHTML = '';
+    renderTotalCost();
+  }, 500);
+  console.log("After-SORTED", currentCustomer.sortedBookings)
+  // set timeout here
+    // show date selection / hide everything else
+  setTimeout(showBookingDate, 4000);
+
+});
+// invoking createBooking as arg;
+
+export { refreshBookings, currentCustomer };
