@@ -2,7 +2,7 @@
 import './css/styles.css';
 import './images/turing-logo.png'
 import Customer from './classes/Customer'
-import { customersPromise, bookingsPromise, roomsPromise } from "./apiCalls"
+import { customersPromise, bookingsPromise, roomsPromise, addBooking, getAllBookings, getPromise } from "./apiCalls"
 
 // ----------------- QUERY SELECTORS ----------------- //
 
@@ -44,6 +44,7 @@ const getApiData = () => {
     })
     // showData();
     instantiateCustomer(50)
+    currentCustomer.getCustomerBookings(bookingsData)
     renderBookings();
     renderTotalCost();
     // will need to move this bc of login - will eventually be on the submit button when submitting username and password
@@ -51,9 +52,11 @@ const getApiData = () => {
 };
 
 const renderBookings = () => {
-  currentCustomer.getCustomerBookings(bookingsData)
+  console.log("all bookings", currentCustomer.roomsBooked)
+  console.log('all rooms', currentCustomer.allRooms)
   currentCustomer.getAllRooms(roomsData)
   currentCustomer.sortDates();
+  console.log("SORTED", currentCustomer.sortedBookings)
   currentCustomer.sortedBookings.forEach(room => {
     const total = currencyFormatter.format(room.costPerNight);
     customerBookings.innerHTML += `
@@ -78,7 +81,7 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 });
 
 const renderTotalCost = () => {
-  currentCustomer.getCustomerBookings(bookingsData)
+  // currentCustomer.getCustomerBookings(bookingsData)
   let getCost = currentCustomer.calculateTotalSpent(roomsData)
   // let roundCost = getCost.toFixed(2)
   const totalDisplay = currencyFormatter.format(getCost)
@@ -140,9 +143,9 @@ const createBooking = () => {
     date: selectedDate,
     roomNumber: selectedRoom.number
     // selectedRoom.number since selectedRoom is an object above
-  }
+  };
   return newBooking
-}
+};
 
 const showElement = (element) => {
   element.classList.remove('hidden');
@@ -157,6 +160,44 @@ setTimeout(() => {console.log(currentCustomer)}, 5000);
   // match up id from login to the id in customersData and use that to set new customer object which will instantiate our current customer.
   // parseint to a number
 // currentcustomer.allrooms = new Room()
+
+const showBookingDate = () => {
+  showElement(showAvailableRoomsBtn);
+  hideElement(showAvailableRooms);
+  hideElement(confirmBookingBtn);
+  hideElement(bookingConfirmationPage);
+}
+
+const refreshBookings = (id) => {
+  Promise.all([
+    getPromise('//localhost:3001/api/v1/bookings')
+  ]).then(data => {
+    console.log("BEFORE", bookingsData)
+    bookingsData = []
+    console.log("MIDDLE", bookingsData)
+    data[0].bookings.forEach(booking => {
+      bookingsData.push(booking);
+    })
+    refreshDataInstances(data, id)
+    console.log("AFTER", bookingsData)
+  });
+};
+
+const refreshDataInstances = (data, id) => {
+  // console.log(data, id)
+  const findCustomer = () => {
+    customersData.forEach(customer => {
+      if (customer.id === id) {
+        currentCustomer.allRooms = [];
+        currentCustomer.roomsBooked = [];
+        currentCustomer.sortedBookings = [];
+        currentCustomer.getCustomerBookings(bookingsData)
+        // console.log("GET BOOKINGS", )
+      };
+    });
+  };
+  findCustomer();
+};
 
 // ----------------- EVENT LISTENERS ----------------- //
 
@@ -202,11 +243,30 @@ showAvailableRooms.addEventListener('click', (e) => {
   hideElement(showAvailableRooms);
   hideElement(filterRoomsBtn);
   showElement(confirmBookingBtn);
+  // console.log("BEFORE", bookingsData)
 });
 
 confirmBookingBtn.addEventListener('click', (e) => {
   event.preventDefault();
-  let booking = createBooking()
-  console.log(booking);
+  let booking = createBooking();
+  hideElement(confirmBookingBtn);
+  bookingConfirmationPage.innerHTML = '';
+  bookingConfirmationPage.innerHTML +=
+  `<h6>Your reservation is booked!<h6/>`
+  addBooking(booking);
+  console.log("before render bookings", bookingsData)
+  setTimeout(() => {
+    customerBookings.innerHTML = '';
+    renderBookings();
+    totalCost.innerHTML = '';
+    renderTotalCost();
+  }, 500);
+  console.log("After-SORTED", currentCustomer.sortedBookings)
+  // set timeout here
+    // show date selection / hide everything else
+  setTimeout(showBookingDate, 4000);
+
 });
 // invoking createBooking as arg;
+
+export { refreshBookings, currentCustomer };
