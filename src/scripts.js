@@ -116,6 +116,7 @@ const findAvailableRooms = (bookingsData, roomsData) => {
       `
     });
     showElement(filterRoomsBtn);
+    showElement(showAvailableRooms);
   } else {
     showAvailableRooms.innerHTML += `<h5>Please select a valid date</h5>`
     setTimeout(() => {
@@ -198,6 +199,7 @@ const verifyLoginCredentials = (customersData) => {
 };
 
 const showBookingDate = () => {
+  console.log(selectedDate);
   showElement(showAvailableRoomsBtn);
   hideElement(showAvailableRooms);
   hideElement(confirmBookingBtn);
@@ -281,6 +283,7 @@ showAvailableRooms.addEventListener('click', (e) => {
   };
   hideElement(showAvailableRooms);
   hideElement(filterRoomsBtn);
+  showElement(bookingConfirmationPage);
   showElement(confirmBookingBtn);
 });
 
@@ -299,12 +302,10 @@ confirmBookingBtn.addEventListener('click', (e) => {
     renderTotalCost();
   }, 500);
   setTimeout(showBookingDate, 4000);
-
+  refreshBookings(currentCustomer.id)
+  dateInput.value = '';
+  console.log("container", showAvailableRooms)
   console.log("afterbooking", availableRooms);
-  selectedDate = '';
-  selectedRoom = '';
-  showAvailableRooms = '';
-  findAvailableRooms(bookingsData, roomsData);
 });
 
 loginBtn.addEventListener('click', (e) => {
