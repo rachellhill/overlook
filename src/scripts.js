@@ -22,6 +22,7 @@ let customerDashboard = document.querySelector(".dashboard");
 let welcomeMessage = document.querySelector(".welcome-message-container");
 let loginError = document.querySelector(".login-error-message");
 let loginPage = document.querySelector(".login-page-container");
+let clearFilterBtn = document.querySelector('.clear-filters');
 
 
 // ----------------- GLOBAL VARIABLES ----------------- //
@@ -30,7 +31,7 @@ let customersData = [];
 let bookingsData = [];
 let roomsData = [];
 let currentCustomer;
-let selectedDate;
+let selectedDate = '';
 let selectedRoom;
 let availableRooms;
 
@@ -112,19 +113,32 @@ const findAvailableRooms = (bookingsData, roomsData) => {
   }).map(booking => booking.roomNumber)
   availableRooms = roomsData.filter(room => (!bookedRooms.includes(room.number)))
 
-  availableRooms.forEach(room => {
-    showAvailableRooms.innerHTML += `
-    <div class="available-room">
-      <button class="available-room-btn" id="${room.number}">
-        <h5>${room.roomType}</h5>
-        <p>Bed Size: ${room.bedSize}</p>
-        <p>Number of Beds: ${room.numBeds}</p>
-        <p>Cost: ${room.costPerNight}</p>
-      </button>
-    </div>
-    `
-  })
-};
+  if (selectedDate) {
+    availableRooms.forEach(room => {
+      showAvailableRooms.innerHTML += `
+      <div class="available-room">
+        <button class="available-room-btn" id="${room.number}">
+          <h5>${room.roomType}</h5>
+          <p>Bed Size: ${room.bedSize}</p>
+          <p>Number of Beds: ${room.numBeds}</p>
+          <p>Cost: ${room.costPerNight}</p>
+        </button>
+      </div>
+      `
+    })
+    showElement(filterRoomsBtn);
+  } else {
+    showAvailableRooms.innerHTML += `<h5>Please select a valid date</h5>`
+    setTimeout(() => {
+      showElement(showAvailableRoomsBtn);
+      showAvailableRooms.innerHTML = '';
+    }, 2000)
+  }
+}
+  // if equals empty string, iterate and inject
+  // else, show error
+  // after they hit submit booking, reset date and selectedRoom to null
+
 
 const showSelectedBooking = (id) => {
   selectedRoom = availableRooms.find(room => {
@@ -242,7 +256,7 @@ window.onload = (event) => {
 
 showAvailableRoomsBtn.addEventListener("click", (e) => {
   findAvailableRooms(bookingsData, roomsData);
-  showElement(filterRoomsBtn);
+  console.log("before filter", availableRooms)
   hideElement(showAvailableRoomsBtn);
   event.preventDefault();
 });
@@ -268,11 +282,20 @@ filterOptions.addEventListener("change", (e) => {
       </div>
     `
   });
+  showElement(clearFilterBtn);
+});
+
+clearFilterBtn.addEventListener('click', (e) => {
+  event.preventDefault();
+  findAvailableRooms(bookingsData, roomsData);
+  console.log("after filter", availableRooms)
 });
 
 showAvailableRooms.addEventListener('click', (e) => {
   event.preventDefault()
-  if (e.target.parentElement.classList.contains("available-room")) {
+  if (!e.target.parentElement.classList.contains("available-room")) {
+    return
+  } else if (e.target.parentElement.classList.contains("available-room")) {
     showSelectedBooking(e.target.id);
   };
   hideElement(showAvailableRooms);
