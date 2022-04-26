@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webpack Starter Kit</title>
+    <title>The Overlook Hotel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@700&display=swap" rel="stylesheet">
   </head>
   <body>
     <h1 class="Overlook-title">The Overlook Hotel</h1>
@@ -21,9 +24,8 @@
           <form id="bookingForm" name="bookingForm">
             <div>
               <label for="booking-date">When will you be arriving?</label>
-              <input class="date-input" type="date" required>
+              <input aria-label="Enter a date for desired reservation" class="date-input" type="date" required>
               <button class="show-rooms-btn">Find Available Rooms</button>
-
               <div class="room-filter hidden">
                 <label for="room-type-slection">choose a room type:</label>
                 <select id="select1" name="room-type-selection" class="room-type-selection">
@@ -45,10 +47,9 @@
           </form>
           <!-- form details fo here - iteration 2 -->
         </section>
-        <section class"reservations-container">
+        <section class="reservations-container">
           <h3>Your Reservations</h3>
           <div class="customer-reservations-container">
-
             <!-- insert reservations - iteration 1 -->
           </div>
         </section>
