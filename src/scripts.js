@@ -118,6 +118,8 @@ const findAvailableRooms = (bookingsData, roomsData) => {
     });
     showElement(filterRoomsBtn);
     showElement(showAvailableRooms);
+  } else if (availableRooms.length === 0) {
+    showAvailableRooms.innerHTML += `<h5 class="no-rooms-available-error">We are so sorry! There are no rooms available for the date selected. Please adjust your selection</h5>`
   } else {
     showAvailableRooms.innerHTML += `<h5 class="date-error">Please select a valid date</h5>`
     setTimeout(() => {
