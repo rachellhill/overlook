@@ -3,18 +3,19 @@
 }
 
 body {
-  background: white;
   height: 100vh;
   width: 100vw;
   overflow-y: hidden;
   margin: 0px;
-  /* background-size: cover;
-  height: 100vh;
-  width: 100vw; */
+}
+
+button:hover {
+  opacity: 0.8;
+  cursor: pointer;
 }
 
 h1 {
-  margin: 15px;
+  margin: 26px;
   padding: 5px;
   display: flex;
   justify-content: center;
@@ -40,29 +41,90 @@ h5 {
   display: flex;
   justify-content: center;
   margin: 30px;
+  font-size: 19px;
 }
 
-/* main {
-  display: flex;
-  justify-content: space-evenly;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-} */
-
-/* not centered  */
+h6 {
+  font-size: 22px;
+  margin: 20px;
+}
 
 form {
   display: flex;
 }
-/* .book-container,
-.total-cost-container {
-    position: fixed;
+
+img {
+  height: 121%;
+  width: 100%;
+  object-fit: cover;
 }
 
-.book-container {
-  float: left;
-} */
+.login-page-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 87vh;
+  width: 100vw;
+}
+
+.login-container {
+  display: flex;
+  height: 50vh;
+  width: 30vw;
+  border: black solid 2px;
+  background: white;
+  color: black;
+  flex-direction: column;
+  align-content: stretch;
+  justify-content: space-evenly;
+  align-items: center;
+  margin: 203px;
+  padding: 20px;
+  position: absolute;
+  opacity: 94%;
+}
+
+.login-title {
+  border: black solid 2px;
+  padding: 13px;
+  background-color: #C5DCA0;
+}
+
+.login-btn, .show-rooms-btn, .available-room-btn, .submit-booking-btn {
+  background-color: #E3F2FD;
+  padding: 10px;
+}
+
+.show-rooms-btn {
+  margin-left: 195px;
+  margin-top: 12px;
+}
+
+.show-booking-info {
+  padding: 16px;
+}
+
+.submit-booking-btn {
+  margin-left: 207px;
+}
+
+.date-error {
+  color: red;
+}
+
+.room-filter {
+  padding: 9px;
+}
+
+.username-text, .password-text {
+  font-size: 25px;
+}
+
+.password, .username {
+  font-size: 20px;
+  background-color: white;
+}
+
 .dashboard {
   display: flex;
   flex-direction: row;
@@ -76,6 +138,7 @@ form {
   display: flex;
   justify-content: center;
   margin: 16px;
+  font-size: 22px;
 }
 
 .reservations-container,
@@ -100,7 +163,6 @@ form {
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  /* position: absolute; */
 }
 
 .show-available-rooms-section {
@@ -110,6 +172,7 @@ form {
   justify-content: center;
   overflow-y: scroll;
   height: 72vh;
+  width: 29vw;
 }
 
 .available-room {
@@ -127,27 +190,10 @@ form {
   color: red;
 }
 
-
-
-/* scrollbar within the container:  */
-/* container::-webkit-scrollbar */
-
-/* .total-cost-container {
-  margin-left: 700px;
-} */
-
 .book-container {
   display: flex;
   flex-direction: column;
-  /* margin: 40px; */
 }
-
-/* .show-available-rooms-section {
-  display: flex;
-  overflow-y: scroll;
-  position: absolute;
-  height: 80%;
-} */
 
 .hidden {
   display: none;
