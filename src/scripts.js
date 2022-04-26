@@ -1,8 +1,8 @@
 // ----------------- IMPORTS ----------------- //
 import './css/styles.css';
-import './images/turing-logo.png'
-import Customer from './classes/Customer'
-import { customersPromise, bookingsPromise, roomsPromise, addBooking, getAllBookings, getPromise } from "./apiCalls"
+import './images/turing-logo.png';
+import Customer from './classes/Customer';
+import { customersPromise, bookingsPromise, roomsPromise, addBooking, getAllBookings, getPromise } from "./apiCalls";
 
 // ----------------- QUERY SELECTORS ----------------- //
 
@@ -24,7 +24,6 @@ let loginError = document.querySelector(".login-error-message");
 let loginPage = document.querySelector(".login-page-container");
 let clearFilterBtn = document.querySelector('.clear-filters');
 
-
 // ----------------- GLOBAL VARIABLES ----------------- //
 
 let customersData = [];
@@ -35,33 +34,26 @@ let selectedDate = '';
 let selectedRoom;
 let availableRooms;
 
-
 // ----------------- functions ----------------- //
 const getApiData = () => {
-  // promise all can be outside of the function and set to a variable
   Promise.all(
     [customersPromise, bookingsPromise, roomsPromise]
   ).then(jsonArray => {
     jsonArray[0].customers.forEach(customer => {
       customersData.push(customer)
-    })
+    });
     jsonArray[1].bookings.forEach(booking => {
       bookingsData.push(booking)
-    })
+    });
     jsonArray[2].rooms.forEach(room => {
       roomsData.push(room)
-    })
-    // showData();
-    // will need to move this bc of login - will eventually be on the submit button when submitting username and password
+    });
   });
 };
 
 const renderBookings = () => {
-  console.log("all bookings", currentCustomer.roomsBooked)
-  console.log('all rooms', currentCustomer.allRooms)
   currentCustomer.getAllRooms(roomsData)
   currentCustomer.sortDates();
-  console.log("SORTED", currentCustomer.sortedBookings)
   currentCustomer.sortedBookings.forEach(room => {
     const total = currencyFormatter.format(room.costPerNight);
     customerBookings.innerHTML += `
@@ -85,15 +77,11 @@ const currencyFormatter = new Intl.NumberFormat('en-US', {
 });
 
 const renderTotalCost = () => {
-  // currentCustomer.getCustomerBookings(bookingsData)
   let getCost = currentCustomer.calculateTotalSpent(roomsData)
-  // let roundCost = getCost.toFixed(2)
   const totalDisplay = currencyFormatter.format(getCost)
   totalCost.innerHTML += `
     <h3 class="total-spend">${totalDisplay}</h3>`
 };
-// need to access roomsBooked in the customer class and iterate over each to create an HTML element for customerBookings
-// function - find bidet
 
 const instantiateCustomer = (id) => {
   let customerArg;
@@ -107,11 +95,12 @@ const instantiateCustomer = (id) => {
 };
 
 const findAvailableRooms = (bookingsData, roomsData) => {
+  showAvailableRooms.innerHTML = '';
   selectedDate = dateInput.value.replaceAll('-', '/')
   const bookedRooms = bookingsData.filter((booking) => {
-    return booking.date === selectedDate
+    return booking.date === selectedDate;
   }).map(booking => booking.roomNumber)
-  availableRooms = roomsData.filter(room => (!bookedRooms.includes(room.number)))
+  availableRooms = roomsData.filter(room => (!bookedRooms.includes(room.number)));
 
   if (selectedDate) {
     availableRooms.forEach(room => {
@@ -125,26 +114,21 @@ const findAvailableRooms = (bookingsData, roomsData) => {
         </button>
       </div>
       `
-    })
+    });
     showElement(filterRoomsBtn);
   } else {
     showAvailableRooms.innerHTML += `<h5>Please select a valid date</h5>`
     setTimeout(() => {
       showElement(showAvailableRoomsBtn);
       showAvailableRooms.innerHTML = '';
-    }, 2000)
-  }
-}
-  // if equals empty string, iterate and inject
-  // else, show error
-  // after they hit submit booking, reset date and selectedRoom to null
-
+    }, 2000);
+  };
+};
 
 const showSelectedBooking = (id) => {
   selectedRoom = availableRooms.find(room => {
     return id === room.number.toString();
-  })
-  console.log("SELECTED ROOM", selectedRoom)
+  });
   bookingConfirmationPage.innerHTML += `
     <h6>Your reservation details: ${selectedRoom.roomType}</h6>
       <p>Bed size: ${selectedRoom.bedSize}</p>
@@ -152,14 +136,13 @@ const showSelectedBooking = (id) => {
       <p>Number of Beds: ${selectedRoom.numBeds}</p>
     <h7>TOTAL: ${selectedRoom.costPerNight}</h7>
   `
-}
+};
 
 const createBooking = () => {
   let newBooking = {
     userID: currentCustomer.id,
     date: selectedDate,
     roomNumber: selectedRoom.number
-    // selectedRoom.number since selectedRoom is an object above
   };
   return newBooking
 };
@@ -186,8 +169,8 @@ const verifyPassword = () => {
     return true;
   } else {
     return false;
-  }
-}
+  };
+};
 
 const verifyLoginCredentials = (customersData) => {
   const userID = verifyUsername();
@@ -212,14 +195,14 @@ const verifyLoginCredentials = (customersData) => {
       }, 2000);
     };
   });
-}
+};
 
 const showBookingDate = () => {
   showElement(showAvailableRoomsBtn);
   hideElement(showAvailableRooms);
   hideElement(confirmBookingBtn);
   hideElement(bookingConfirmationPage);
-}
+};
 
 const refreshBookings = (id) => {
   Promise.all([
@@ -256,7 +239,6 @@ window.onload = (event) => {
 
 showAvailableRoomsBtn.addEventListener("click", (e) => {
   findAvailableRooms(bookingsData, roomsData);
-  console.log("before filter", availableRooms)
   hideElement(showAvailableRoomsBtn);
   event.preventDefault();
 });
@@ -288,7 +270,6 @@ filterOptions.addEventListener("change", (e) => {
 clearFilterBtn.addEventListener('click', (e) => {
   event.preventDefault();
   findAvailableRooms(bookingsData, roomsData);
-  console.log("after filter", availableRooms)
 });
 
 showAvailableRooms.addEventListener('click', (e) => {
@@ -318,6 +299,12 @@ confirmBookingBtn.addEventListener('click', (e) => {
     renderTotalCost();
   }, 500);
   setTimeout(showBookingDate, 4000);
+
+  console.log("afterbooking", availableRooms);
+  selectedDate = '';
+  selectedRoom = '';
+  showAvailableRooms = '';
+  findAvailableRooms(bookingsData, roomsData);
 });
 
 loginBtn.addEventListener('click', (e) => {
