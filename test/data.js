@@ -58,7 +58,7 @@ let roomSampleData = [
     bedSize: "queen",
     numBeds: 1,
     costPerNight: 200.39
-  }
-]
+  };
+];
 
 export { customers, roomSampleData, bookingSampleData };
