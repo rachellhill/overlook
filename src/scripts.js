@@ -86,7 +86,7 @@ const renderTotalCost = () => {
   // let roundCost = getCost.toFixed(2)
   const totalDisplay = currencyFormatter.format(getCost)
   totalCost.innerHTML += `
-    <h5 class="total-spend">${totalDisplay}</h5>`
+    <h3 class="total-spend">${totalDisplay}</h5>`
 };
 // need to access roomsBooked in the customer class and iterate over each to create an HTML element for customerBookings
 // function - find bidet

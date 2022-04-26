@@ -1,22 +1,45 @@
-/* * {
-  border: solid yellow 5px
-} */
+* {
+    font-family: 'Old Standard TT', serif;
+}
 
 body {
-  background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);
+  background: white;
   height: 100vh;
   width: 100vw;
   overflow-y: hidden;
+  margin: 0px;
+  /* background-size: cover;
+  height: 100vh;
+  width: 100vw; */
 }
 
 h1 {
+  margin: 15px;
+  padding: 5px;
   display: flex;
   justify-content: center;
+  border: black solid 1px;
+  background-color: #C5DCA0;
 }
 
 h2 {
   display: flex;
   justify-content: center;
+}
+
+h3 {
+  display: flex;
+  justify-content: center;
+  border: black solid 1px;
+  margin: 15px;
+  padding: 5px;
+  background-color: #C5DCA0;
+}
+
+h5 {
+  display: flex;
+  justify-content: center;
+  margin: 70px;
 }
 
 /* main {
@@ -27,10 +50,6 @@ h2 {
   width: 100%;
 } */
 
-h3 {
-  display: flex;
-  justify-content: center
-}
 /* not centered  */
 
 form {
@@ -47,9 +66,10 @@ form {
 .dashboard {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-around;
   align-items: flex-start;
   margin: 10px;
+  height: 85vh;
 }
 
 /* .header-container {
@@ -58,23 +78,59 @@ form {
   justify-content: space-around;
 } */
 
-.customer-reservations-container {
-  height: 80%;
-  overflow-y: scroll;
-  position: absolute;
+.reservations-container,
+.cost-container,
+.book-container {
+  height: 85vh;
+  width: 30vw;
+  border: black solid 1px;
 }
+
+.booking-card {
+  width: 30vw;
+  border: black solid 2px;
+  padding: 15px;
+  margin: 15px;
+  height: 23vh;
+  width: 26vw;
+}
+
+.customer-reservations-container {
+  height: 78vh;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  /* position: absolute; */
+}
+
+.show-available-rooms-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  overflow-y: scroll;
+  height: 74vh;
+}
+
+.available-room {
+  padding: 10px;
+  height: 20vh;
+  width: 20vw;
+}
+
+
 
 /* scrollbar within the container:  */
 /* container::-webkit-scrollbar */
 
-.total-cost-container {
+/* .total-cost-container {
   margin-left: 700px;
-}
+} */
 
 .book-container {
   display: flex;
   flex-direction: column;
-  margin: 40px;
+  /* margin: 40px; */
 }
 
 /* .show-available-rooms-section {
