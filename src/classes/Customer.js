@@ -3,12 +3,9 @@ class Customer {
     this.id = customerInfo.id;
     this.name = customerInfo.name;
     this.roomsBooked = [];
-    // rooms booked by customer
     this.allRooms = [];
     this.totalSpent = 0;
     this.sortedBookings = [];
-    // this.previousTrips = [];
-    // this.upcomingTrips = [];
   }
 
   getCustomerBookings(bookingData) {

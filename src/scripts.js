@@ -15,6 +15,13 @@ let filterRoomsBtn = document.querySelector('.room-filter');
 let filterOptions = document.querySelector('.room-type-selection');
 let confirmBookingBtn = document.querySelector(".submit-booking-btn");
 let bookingConfirmationPage = document.querySelector(".show-booking-info");
+let username = document.querySelector(".username");
+let password = document.querySelector(".password");
+let loginBtn = document.querySelector(".login-btn");
+let customerDashboard = document.querySelector(".dashboard");
+let welcomeMessage = document.querySelector(".welcome-message-container");
+let loginError = document.querySelector(".login-error-message");
+let loginPage = document.querySelector(".login-page-container");
 
 
 // ----------------- GLOBAL VARIABLES ----------------- //
@@ -26,6 +33,7 @@ let currentCustomer;
 let selectedDate;
 let selectedRoom;
 let availableRooms;
+
 
 // ----------------- functions ----------------- //
 const getApiData = () => {
@@ -43,10 +51,6 @@ const getApiData = () => {
       roomsData.push(room)
     })
     // showData();
-    instantiateCustomer(50)
-    currentCustomer.getCustomerBookings(bookingsData)
-    renderBookings();
-    renderTotalCost();
     // will need to move this bc of login - will eventually be on the submit button when submitting username and password
   });
 };
@@ -67,7 +71,6 @@ const renderBookings = () => {
       <li class="feature-list">Room size: ${room.bedSize}</li>
       <li class="feature-list">Number of beds: ${room.numBeds}</li>
       <li class="feature-list">Bidet: ${room.bidet}</li>
-      <li class="feature-list">Bidet: ${room.number}</li>
     </ul>
     <p class="room-cost">Cost per night: ${total}</p>
     </section>
@@ -86,7 +89,7 @@ const renderTotalCost = () => {
   // let roundCost = getCost.toFixed(2)
   const totalDisplay = currencyFormatter.format(getCost)
   totalCost.innerHTML += `
-    <h3 class="total-spend">${totalDisplay}</h5>`
+    <h3 class="total-spend">${totalDisplay}</h3>`
 };
 // need to access roomsBooked in the customer class and iterate over each to create an HTML element for customerBookings
 // function - find bidet
@@ -112,7 +115,7 @@ const findAvailableRooms = (bookingsData, roomsData) => {
   availableRooms.forEach(room => {
     showAvailableRooms.innerHTML += `
     <div class="available-room">
-      <button id="${room.number}">
+      <button class="available-room-btn" id="${room.number}">
         <h5>${room.roomType}</h5>
         <p>Bed Size: ${room.bedSize}</p>
         <p>Number of Beds: ${room.numBeds}</p>
@@ -155,11 +158,47 @@ const hideElement = (element) => {
   element.classList.add('hidden');
 };
 
-setTimeout(() => {console.log(currentCustomer)}, 5000);
-// will change on login iteration
-  // match up id from login to the id in customersData and use that to set new customer object which will instantiate our current customer.
-  // parseint to a number
-// currentcustomer.allrooms = new Room()
+const verifyUsername = (customersData) => {
+  const usernameEntered = username.value;
+  const getLetters = usernameEntered.slice(0, usernameEntered.search(/\d/))
+  const userID = Number(usernameEntered.replace(getLetters, ''))
+
+  return userID;
+};
+
+const verifyPassword = () => {
+  const passwordEntered = password.value;
+  if (passwordEntered === "overlook2021") {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+const verifyLoginCredentials = (customersData) => {
+  const userID = verifyUsername();
+  customersData.forEach(customer => {
+    if (userID === customer.id && verifyPassword()) {
+      instantiateCustomer(userID);
+      currentCustomer.getCustomerBookings(bookingsData)
+      renderBookings();
+      renderTotalCost();
+      showElement(customerDashboard);
+      showElement(welcomeMessage);
+      hideElement(loginError);
+      hideElement(loginPage);
+      loginError.innerText = '';
+      welcomeMessage.innerText = `Welcome, ${currentCustomer.name}!`
+    } else {
+      showElement(loginError);
+      loginBtn.disabled = true;
+      setTimeout(() => {
+        hideElement(loginError)
+        loginBtn.disabled = false;
+      }, 2000);
+    };
+  });
+}
 
 const showBookingDate = () => {
   showElement(showAvailableRoomsBtn);
@@ -172,19 +211,15 @@ const refreshBookings = (id) => {
   Promise.all([
     getPromise('//localhost:3001/api/v1/bookings')
   ]).then(data => {
-    console.log("BEFORE", bookingsData)
     bookingsData = []
-    console.log("MIDDLE", bookingsData)
     data[0].bookings.forEach(booking => {
       bookingsData.push(booking);
     })
     refreshDataInstances(data, id)
-    console.log("AFTER", bookingsData)
   });
 };
 
 const refreshDataInstances = (data, id) => {
-  // console.log(data, id)
   const findCustomer = () => {
     customersData.forEach(customer => {
       if (customer.id === id) {
@@ -192,7 +227,6 @@ const refreshDataInstances = (data, id) => {
         currentCustomer.roomsBooked = [];
         currentCustomer.sortedBookings = [];
         currentCustomer.getCustomerBookings(bookingsData)
-        // console.log("GET BOOKINGS", )
       };
     });
   };
@@ -204,7 +238,8 @@ const refreshDataInstances = (data, id) => {
 window.onload = (event) => {
   getApiData();
   hideElement(confirmBookingBtn);
-}
+};
+
 showAvailableRoomsBtn.addEventListener("click", (e) => {
   findAvailableRooms(bookingsData, roomsData);
   showElement(filterRoomsBtn);
@@ -224,7 +259,7 @@ filterOptions.addEventListener("change", (e) => {
   availableRoomsByFilter.forEach(room => {
     showAvailableRooms.innerHTML += `
       <div class="available-room">
-        <button id="${room.number}">
+        <button class="available-room-btn" id="${room.number}">
           <h5>${room.roomType}</h5>
           <p>Bed Size: ${room.bedSize}</p>
           <p>Number of Beds: ${room.numBeds}</p>
@@ -243,7 +278,6 @@ showAvailableRooms.addEventListener('click', (e) => {
   hideElement(showAvailableRooms);
   hideElement(filterRoomsBtn);
   showElement(confirmBookingBtn);
-  // console.log("BEFORE", bookingsData)
 });
 
 confirmBookingBtn.addEventListener('click', (e) => {
@@ -254,19 +288,17 @@ confirmBookingBtn.addEventListener('click', (e) => {
   bookingConfirmationPage.innerHTML +=
   `<h6>Your reservation is booked!<h6/>`
   addBooking(booking);
-  console.log("before render bookings", bookingsData)
   setTimeout(() => {
     customerBookings.innerHTML = '';
     renderBookings();
     totalCost.innerHTML = '';
     renderTotalCost();
   }, 500);
-  console.log("After-SORTED", currentCustomer.sortedBookings)
-  // set timeout here
-    // show date selection / hide everything else
   setTimeout(showBookingDate, 4000);
-
 });
-// invoking createBooking as arg;
+
+loginBtn.addEventListener('click', (e) => {
+  verifyLoginCredentials(customersData);
+});
 
 export { refreshBookings, currentCustomer };
