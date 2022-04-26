@@ -65,29 +65,28 @@ describe('Customer', () => {
         date: "2022/02/11",
         roomNumber: 9
       }
-    ])
-  })
+    ]);
+  });
 
   it('should let the customer know if they do not have any bookings', () => {
     expect(customer3.getCustomerBookings(bookings)).to.equal(`You do not have any reservations with the Overlook Hotel`);
-  })
+  });
 
   it('should calculate total cost that a customer has spent on rooms at the Overlook', () => {
     customer1.getCustomerBookings(bookings)
     customer1.calculateTotalSpent(rooms)
     expect(customer1.totalSpent).to.equal(172.09);
 
-    console.log()
     customer2.getCustomerBookings(bookings)
     customer2.calculateTotalSpent(rooms)
     expect(customer2.totalSpent).to.equal(575.06);
-  })
+  });
 
   it('should return a total cost of 0 if a user has no bookings with the hotel', () => {
     customer3.getCustomerBookings(bookings)
     customer3.calculateTotalSpent(rooms)
     expect(customer3.totalSpent).to.equal(0);
-  })
+  });
 
   it('should have a method that stores all of the rooms a customer has booked', () => {
     customer1.getCustomerBookings(bookings);
@@ -102,16 +101,14 @@ describe('Customer', () => {
         costPerNight: 172.09,
         date: "2022/02/05"
       }
-    ])
-  })
-  // should add a bookingID
+    ]);
+  });
 
   it('should ensure that a customer that has no bookings has no rooms', () => {
     customer3.getCustomerBookings(bookings);
     customer3.getAllRooms(rooms);
-    // console.log(customer3.allRooms)
     expect(customer3.allRooms).to.deep.equal([])
-  })
+  });
 
   it('should sort dates of booked rooms', () => {
     customer2.getCustomerBookings(bookings);
@@ -136,13 +133,6 @@ describe('Customer', () => {
         costPerNight: 374.67,
         date: "2022/01/24"
       }
-    ])
-    // console.log(customer3.allRooms)
-    // expect(customer3.allRooms).to.deep.equal([])
-  })
-  // it('should know if their booking is in the past or present', () => {
-  //   customer1.getCustomerBookings(bookings)
-  //   customer1.getPreviousTrips()
-  //   expect(customer1)
-  // })
-})
+    ]);
+  });
+});

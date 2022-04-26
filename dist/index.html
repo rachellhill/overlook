@@ -10,14 +10,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@700&display=swap" rel="stylesheet">
   </head>
   <body>
+    <p class="api-error"></p>
     <h1 class="Overlook-title">The Overlook Hotel</h1>
-    <!-- <img src="./images/turing-logo.png" alt="turing logo"> -->
     <!-- login page goes here -->
     <section class="login-page-container">
+      <img src="./images/hotel-image.jpg" alt="hotel-picture">
       <div class="login-container">
-        <label aria-lable="enter username" for="username"><b>Username</b></label>
+        <h2 class="login-title">Welcome to the Overlook Hotel!</h2>
+        <label class="username-text" aria-lable="enter username" for="username"><b>Username</b></label>
         <input class="username"type="text" placeholder="Enter Username" name="username" required>
-        <label aria-lable="enter password" for="psw"><b>Password</b></label>
+        <label class="password-text"aria-lable="enter password" for="psw"><b>Password</b></label>
         <input class="password" type="password" placeholder="Enter Password" name="password" required>
         <h2 class="login-error-message hidden">Invalid username or password, please try again!</h2>
         <button class="login-btn">LOGIN</button>
@@ -25,7 +27,6 @@
     </section>
     <section class="welcome-message-container hidden">
       <h2 class="welcome-customer-message">Welcome, User!</h2>
-      <!-- add functionality with interpolation for this -->
     </section>
     <main class="main-wrapper">
       <div class="dashboard hidden">
@@ -53,6 +54,7 @@
                 <!-- booked room summary injects here -->
               </section>
               <button class="submit-booking-btn">Confirm Booking</button>
+              <p class="error-message"></p>
             </div>
           </form>
         </section>
@@ -65,7 +67,7 @@
         <section class="cost-container">
           <h3>Total Cost</h3>
           <section class="total-cost-container">
-          <!-- insert total cost info  -->
+          <!-- total cost injects here  -->
           </section>
         </section>
       </div>

@@ -5,7 +5,7 @@ class Room {
     this.bidet = roomsData.bidet;
     this.numBeds = roomsData.numBeds;
     this.costPerNight = roomsData.costPerNight;
-  }
-}
+  };
+};
 
-export default Room
+export default Room;
