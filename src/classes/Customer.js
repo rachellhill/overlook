@@ -51,7 +51,6 @@ class Customer {
       return acc
     }, []);
       this.allRooms = result
-      console.log(result)
       return result;
   }
 

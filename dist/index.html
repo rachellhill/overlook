@@ -15,9 +15,9 @@
     <!-- login page goes here -->
     <section class="login-page-container">
       <div class="login-container">
-        <label for="username"><b>Username</b></label>
+        <label aria-lable="enter username" for="username"><b>Username</b></label>
         <input class="username"type="text" placeholder="Enter Username" name="username" required>
-        <label for="psw"><b>Password</b></label>
+        <label aria-lable="enter password" for="psw"><b>Password</b></label>
         <input class="password" type="password" placeholder="Enter Password" name="password" required>
         <h2 class="login-error-message hidden">Invalid username or password, please try again!</h2>
         <button class="login-btn">LOGIN</button>
@@ -36,15 +36,15 @@
               <label for="booking-date">When will you be arriving?</label>
               <input aria-label="Enter a date for desired reservation" class="date-input" type="date" required>
               <button class="show-rooms-btn">Find Available Rooms</button>
-              <div class="room-filter hidden">
+              <div aria-lable="filter by room type" class="room-filter hidden">
                 <label for="room-type-slection">choose a room type:</label>
                 <select id="select1" name="room-type-selection" class="room-type-selection">
-                  <option class="any" value="any">any</option>
                   <option class="junior-suite" value="junior suite">junior suite</option>
                   <option class="residential-suite" value="residential suite">residential suite</option>
                   <option class="single-room" value="single room">single room</option>
                   <option class="suite" value="suite">suite</option>
                 </select>
+                <button aria-lable="clear all filters" class="clear-filters hidden">Clear Filters</button>
               </div>
               <section class="show-available-rooms-section">
                 <!-- available rooms & filters inject here -->
@@ -55,12 +55,11 @@
               <button class="submit-booking-btn">Confirm Booking</button>
             </div>
           </form>
-          <!-- form details fo here - iteration 2 -->
         </section>
         <section class="reservations-container">
           <h3>Your Reservations</h3>
           <div class="customer-reservations-container">
-            <!-- insert reservations - iteration 1 -->
+            <!-- customer bookings inject here -->
           </div>
         </section>
         <section class="cost-container">
@@ -74,4 +73,3 @@
   </body>
   <script src="bundle.js"></script>
 </html>
-  <!-- Do not include the scripts.js or class files here - it is done by the webpack server -->
