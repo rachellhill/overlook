@@ -39,7 +39,7 @@ h3 {
 h5 {
   display: flex;
   justify-content: center;
-  margin: 70px;
+  margin: 30px;
 }
 
 /* main {
@@ -72,11 +72,11 @@ form {
   height: 85vh;
 }
 
-/* .header-container {
+.welcome-message-container {
   display: flex;
-  z-index: 9;
-  justify-content: space-around;
-} */
+  justify-content: center;
+  margin: 16px;
+}
 
 .reservations-container,
 .cost-container,
@@ -109,13 +109,22 @@ form {
   flex-wrap: wrap;
   justify-content: center;
   overflow-y: scroll;
-  height: 74vh;
+  height: 72vh;
 }
 
 .available-room {
-  padding: 10px;
+  padding: 5px;
   height: 20vh;
-  width: 20vw;
+  width: 12vw;
+}
+
+.available-room-btn {
+  length: 126.31px;
+  width: 181.98px;
+}
+
+.login-error-message {
+  color: red;
 }
 
 
