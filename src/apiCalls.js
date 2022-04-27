@@ -56,7 +56,7 @@ const showError = (message) => {
 const getPromise = (url) => {
   return fetch(url)
   .then(response => response.json())
-  .catch(err => cshowError('There was an issue submitting your booking. Try again!')
+  .catch(err => showError('There was an issue submitting your booking. Try again!')
   );
 };
 
