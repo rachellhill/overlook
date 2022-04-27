@@ -280,6 +280,7 @@ showAvailableRooms.addEventListener('click', (e) => {
   if (!e.target.parentElement.classList.contains("available-room")) {
     return
   } else if (e.target.parentElement.classList.contains("available-room")) {
+    bookingConfirmationPage.innerHTML = '';
     showSelectedBooking(e.target.id);
   };
   hideElement(showAvailableRooms);
@@ -294,7 +295,7 @@ confirmBookingBtn.addEventListener('click', (e) => {
   hideElement(confirmBookingBtn);
   bookingConfirmationPage.innerHTML = '';
   bookingConfirmationPage.innerHTML +=
-  `<h6>Your reservation is booked!<h6/>`
+  `<h6 class"booking-confirmation-notification">Your reservation is booked!<h6/>`
   addBooking(booking);
   setTimeout(() => {
     customerBookings.innerHTML = '';
