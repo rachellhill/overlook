@@ -1,5 +1,4 @@
 // ----------------- IMPORTS ----------------- //
-
 import './css/styles.css';
 import Customer from './classes/Customer';
 import { customersPromise, bookingsPromise, roomsPromise, addBooking, getAllBookings, getPromise } from "./apiCalls";
@@ -118,8 +117,6 @@ const findAvailableRooms = (bookingsData, roomsData) => {
     });
     showElement(filterRoomsBtn);
     showElement(showAvailableRooms);
-  } else if (availableRooms.length === 0) {
-    showAvailableRooms.innerHTML += `<h5 class="no-rooms-available-error">We are so sorry! There are no rooms available for the date selected. Please adjust your selection</h5>`
   } else {
     showAvailableRooms.innerHTML += `<h5 class="date-error">Please select a valid date</h5>`
     setTimeout(() => {
@@ -163,6 +160,7 @@ const verifyUsername = (customersData) => {
   const usernameEntered = username.value;
   const getLetters = usernameEntered.slice(0, usernameEntered.search(/\d/))
   const userID = Number(usernameEntered.replace(getLetters, ''))
+
   return userID;
 };
 
@@ -201,6 +199,7 @@ const verifyLoginCredentials = (customersData) => {
 };
 
 const showBookingDate = () => {
+
   showElement(showAvailableRoomsBtn);
   hideElement(showAvailableRooms);
   hideElement(confirmBookingBtn);
@@ -305,6 +304,8 @@ confirmBookingBtn.addEventListener('click', (e) => {
   setTimeout(showBookingDate, 4000);
   refreshBookings(currentCustomer.id)
   dateInput.value = '';
+  console.log("container", showAvailableRooms)
+  console.log("afterbooking", availableRooms);
 });
 
 loginBtn.addEventListener('click', (e) => {
