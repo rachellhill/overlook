@@ -46,7 +46,8 @@ const addBooking = (newBooking) => {
 const getPromise = (url) => {
   return fetch(url)
   .then(response => response.json())
-  .catch(err => console.log("error"));
+  .catch(err => showError('There was an issue submitting your booking. Try again!')
+  );
 };
 
 let customersPromise = getAllCustomers();
