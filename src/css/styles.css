@@ -41,7 +41,8 @@ h5 {
   display: flex;
   justify-content: center;
   margin: 30px;
-  font-size: 19px;
+  font-size: 13px;
+  font-weight: bold;
 }
 
 h6 {
@@ -172,7 +173,7 @@ img {
   justify-content: center;
   overflow-y: scroll;
   height: 72vh;
-  width: 29vw;
+  width: 30vw;
 }
 
 .available-room {
