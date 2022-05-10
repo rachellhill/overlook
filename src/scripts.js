@@ -34,7 +34,15 @@ let selectedDate = '';
 let selectedRoom;
 let availableRooms;
 
-// ----------------- functions ----------------- //
+// ----------------- FUNCTIONS ----------------- //
+const showElement = (element) => {
+  element.classList.remove('hidden');
+};
+
+const hideElement = (element) => {
+  element.classList.add('hidden');
+};
+
 const getApiData = () => {
   Promise.all(
     [customersPromise, bookingsPromise, roomsPromise]
@@ -49,6 +57,43 @@ const getApiData = () => {
       roomsData.push(room)
     });
   });
+};
+
+const instantiateCustomer = (id) => {
+  let customerArg;
+  customersData.forEach(customer => {
+    if (customer.id === id) {
+      customerArg = customer
+    };
+  });
+  currentCustomer = new Customer(customerArg)
+  return currentCustomer;
+};
+
+const refreshBookings = (id) => {
+  Promise.all([
+    getPromise('//localhost:3001/api/v1/bookings')
+  ]).then(data => {
+    bookingsData = []
+    data[0].bookings.forEach(booking => {
+      bookingsData.push(booking);
+    })
+    refreshDataInstances(data, id)
+  });
+};
+
+const refreshDataInstances = (data, id) => {
+  const findCustomer = () => {
+    customersData.forEach(customer => {
+      if (customer.id === id) {
+        currentCustomer.allRooms = [];
+        currentCustomer.roomsBooked = [];
+        currentCustomer.sortedBookings = [];
+        currentCustomer.getCustomerBookings(bookingsData)
+      };
+    });
+  };
+  findCustomer();
 };
 
 const renderBookings = () => {
@@ -81,17 +126,6 @@ const renderTotalCost = () => {
   const totalDisplay = currencyFormatter.format(getCost)
   totalCost.innerHTML += `
     <h3 class="total-spend">${totalDisplay}</h3>`
-};
-
-const instantiateCustomer = (id) => {
-  let customerArg;
-  customersData.forEach(customer => {
-    if (customer.id === id) {
-      customerArg = customer
-    };
-  });
-  currentCustomer = new Customer(customerArg)
-  return currentCustomer;
 };
 
 const findAvailableRooms = (bookingsData, roomsData) => {
@@ -148,19 +182,10 @@ const createBooking = () => {
   return newBooking
 };
 
-const showElement = (element) => {
-  element.classList.remove('hidden');
-};
-
-const hideElement = (element) => {
-  element.classList.add('hidden');
-};
-
 const verifyUsername = (customersData) => {
   const usernameEntered = username.value;
   const getLetters = usernameEntered.slice(0, usernameEntered.search(/\d/))
   const userID = Number(usernameEntered.replace(getLetters, ''))
-
   return userID;
 };
 
@@ -199,37 +224,10 @@ const verifyLoginCredentials = (customersData) => {
 };
 
 const showBookingDate = () => {
-
   showElement(showAvailableRoomsBtn);
   hideElement(showAvailableRooms);
   hideElement(confirmBookingBtn);
   hideElement(bookingConfirmationPage);
-};
-
-const refreshBookings = (id) => {
-  Promise.all([
-    getPromise('//localhost:3001/api/v1/bookings')
-  ]).then(data => {
-    bookingsData = []
-    data[0].bookings.forEach(booking => {
-      bookingsData.push(booking);
-    })
-    refreshDataInstances(data, id)
-  });
-};
-
-const refreshDataInstances = (data, id) => {
-  const findCustomer = () => {
-    customersData.forEach(customer => {
-      if (customer.id === id) {
-        currentCustomer.allRooms = [];
-        currentCustomer.roomsBooked = [];
-        currentCustomer.sortedBookings = [];
-        currentCustomer.getCustomerBookings(bookingsData)
-      };
-    });
-  };
-  findCustomer();
 };
 
 // ----------------- EVENT LISTENERS ----------------- //
@@ -305,8 +303,6 @@ confirmBookingBtn.addEventListener('click', (e) => {
   setTimeout(showBookingDate, 4000);
   refreshBookings(currentCustomer.id)
   dateInput.value = '';
-  console.log("container", showAvailableRooms)
-  console.log("afterbooking", availableRooms);
 });
 
 loginBtn.addEventListener('click', (e) => {

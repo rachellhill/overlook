@@ -32,8 +32,8 @@ h3 {
   display: flex;
   justify-content: center;
   border: black solid 1px;
-  margin: 15px;
-  padding: 5px;
+  margin: 9px;
+  padding: 10px;
   background-color: #C5DCA0;
 }
 
@@ -141,11 +141,20 @@ img {
   font-size: 22px;
 }
 
+.cost-container {
+  height: 10vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
+
 .reservations-container,
-.cost-container,
 .book-container {
   height: 85vh;
-  width: 30vw;
+  width: 36vw;
   border: black solid 1px;
 }
 
@@ -182,8 +191,8 @@ img {
 }
 
 .available-room-btn {
-  length: 126.31px;
-  width: 181.98px;
+  height: 20vh;
+  width: 12vw;
 }
 
 .login-error-message {
