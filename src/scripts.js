@@ -103,7 +103,7 @@ const renderBookings = () => {
     const total = currencyFormatter.format(room.costPerNight);
     customerBookings.innerHTML += `
     <section class="booking-card">
-    <p class="date">${room.date}</p>
+    <p class="date">Date Booked: ${room.date}</p>
     <h4 class="reservation-info">You booked a ${room.roomType} with additional features below:</p>
     <ul class="room-features">
       <li class="feature-list">Room size: ${room.bedSize}</li>
