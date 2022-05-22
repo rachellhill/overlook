@@ -34,7 +34,15 @@ let selectedDate = '';
 let selectedRoom;
 let availableRooms;
 
-// ----------------- functions ----------------- //
+// ----------------- FUNCTIONS ----------------- //
+const showElement = (element) => {
+  element.classList.remove('hidden');
+};
+
+const hideElement = (element) => {
+  element.classList.add('hidden');
+};
+
 const getApiData = () => {
   Promise.all(
     [customersPromise, bookingsPromise, roomsPromise]
@@ -51,6 +59,43 @@ const getApiData = () => {
   });
 };
 
+const instantiateCustomer = (id) => {
+  let customerArg;
+  customersData.forEach(customer => {
+    if (customer.id === id) {
+      customerArg = customer
+    };
+  });
+  currentCustomer = new Customer(customerArg)
+  return currentCustomer;
+};
+
+const refreshBookings = (id) => {
+  Promise.all([
+    getPromise('//localhost:3001/api/v1/bookings')
+  ]).then(data => {
+    bookingsData = []
+    data[0].bookings.forEach(booking => {
+      bookingsData.push(booking);
+    })
+    refreshDataInstances(data, id)
+  });
+};
+
+const refreshDataInstances = (data, id) => {
+  const findCustomer = () => {
+    customersData.forEach(customer => {
+      if (customer.id === id) {
+        currentCustomer.allRooms = [];
+        currentCustomer.roomsBooked = [];
+        currentCustomer.sortedBookings = [];
+        currentCustomer.getCustomerBookings(bookingsData)
+      };
+    });
+  };
+  findCustomer();
+};
+
 const renderBookings = () => {
   currentCustomer.getAllRooms(roomsData)
   currentCustomer.sortDates();
@@ -58,7 +103,7 @@ const renderBookings = () => {
     const total = currencyFormatter.format(room.costPerNight);
     customerBookings.innerHTML += `
     <section class="booking-card">
-    <p class="date">${room.date}</p>
+    <p class="date">Date Booked: ${room.date}</p>
     <h4 class="reservation-info">You booked a ${room.roomType} with additional features below:</p>
     <ul class="room-features">
       <li class="feature-list">Room size: ${room.bedSize}</li>
@@ -83,17 +128,6 @@ const renderTotalCost = () => {
     <h3 class="total-spend">${totalDisplay}</h3>`
 };
 
-const instantiateCustomer = (id) => {
-  let customerArg;
-  customersData.forEach(customer => {
-    if (customer.id === id) {
-      customerArg = customer
-    };
-  });
-  currentCustomer = new Customer(customerArg)
-  return currentCustomer;
-};
-
 const findAvailableRooms = (bookingsData, roomsData) => {
   showAvailableRooms.innerHTML = '';
   selectedDate = dateInput.value.replaceAll('-', '/')
@@ -110,7 +144,7 @@ const findAvailableRooms = (bookingsData, roomsData) => {
           <h5>${room.roomType}</h5>
           <p>Bed Size: ${room.bedSize}</p>
           <p>Number of Beds: ${room.numBeds}</p>
-          <p>Cost: ${room.costPerNight}</p>
+          <p>Cost: $${room.costPerNight}</p>
         </button>
       </div>
       `
@@ -148,19 +182,10 @@ const createBooking = () => {
   return newBooking
 };
 
-const showElement = (element) => {
-  element.classList.remove('hidden');
-};
-
-const hideElement = (element) => {
-  element.classList.add('hidden');
-};
-
 const verifyUsername = (customersData) => {
   const usernameEntered = username.value;
   const getLetters = usernameEntered.slice(0, usernameEntered.search(/\d/))
   const userID = Number(usernameEntered.replace(getLetters, ''))
-
   return userID;
 };
 
@@ -199,37 +224,10 @@ const verifyLoginCredentials = (customersData) => {
 };
 
 const showBookingDate = () => {
-
   showElement(showAvailableRoomsBtn);
   hideElement(showAvailableRooms);
   hideElement(confirmBookingBtn);
   hideElement(bookingConfirmationPage);
-};
-
-const refreshBookings = (id) => {
-  Promise.all([
-    getPromise('//localhost:3001/api/v1/bookings')
-  ]).then(data => {
-    bookingsData = []
-    data[0].bookings.forEach(booking => {
-      bookingsData.push(booking);
-    })
-    refreshDataInstances(data, id)
-  });
-};
-
-const refreshDataInstances = (data, id) => {
-  const findCustomer = () => {
-    customersData.forEach(customer => {
-      if (customer.id === id) {
-        currentCustomer.allRooms = [];
-        currentCustomer.roomsBooked = [];
-        currentCustomer.sortedBookings = [];
-        currentCustomer.getCustomerBookings(bookingsData)
-      };
-    });
-  };
-  findCustomer();
 };
 
 // ----------------- EVENT LISTENERS ----------------- //
@@ -261,7 +259,7 @@ filterOptions.addEventListener("change", (e) => {
           <h5>${room.roomType}</h5>
           <p>Bed Size: ${room.bedSize}</p>
           <p>Number of Beds: ${room.numBeds}</p>
-          <p>Cost: ${room.costPerNight}</p>
+          <p>Cost: $${room.costPerNight}</p>
         </button>
       </div>
     `
@@ -276,11 +274,14 @@ clearFilterBtn.addEventListener('click', (e) => {
 
 showAvailableRooms.addEventListener('click', (e) => {
   event.preventDefault()
-  if (!e.target.parentElement.classList.contains("available-room")) {
-    return
-  } else if (e.target.parentElement.classList.contains("available-room")) {
+  console.log(e.target.parentElement.classList)
+  // if (!e.target.parentElement.classList.contains("available-room")) {
+  //   return
+  if (e.target.parentElement.classList.contains("available-room")) {
     bookingConfirmationPage.innerHTML = '';
     showSelectedBooking(e.target.id);
+  } else {
+    return
   };
   hideElement(showAvailableRooms);
   hideElement(filterRoomsBtn);
@@ -305,8 +306,6 @@ confirmBookingBtn.addEventListener('click', (e) => {
   setTimeout(showBookingDate, 4000);
   refreshBookings(currentCustomer.id)
   dateInput.value = '';
-  console.log("container", showAvailableRooms)
-  console.log("afterbooking", availableRooms);
 });
 
 loginBtn.addEventListener('click', (e) => {
