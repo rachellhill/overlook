@@ -144,7 +144,7 @@ const findAvailableRooms = (bookingsData, roomsData) => {
           <h5>${room.roomType}</h5>
           <p>Bed Size: ${room.bedSize}</p>
           <p>Number of Beds: ${room.numBeds}</p>
-          <p>Cost: ${room.costPerNight}</p>
+          <p>Cost: $${room.costPerNight}</p>
         </button>
       </div>
       `
@@ -259,7 +259,7 @@ filterOptions.addEventListener("change", (e) => {
           <h5>${room.roomType}</h5>
           <p>Bed Size: ${room.bedSize}</p>
           <p>Number of Beds: ${room.numBeds}</p>
-          <p>Cost: ${room.costPerNight}</p>
+          <p>Cost: $${room.costPerNight}</p>
         </button>
       </div>
     `
@@ -274,11 +274,14 @@ clearFilterBtn.addEventListener('click', (e) => {
 
 showAvailableRooms.addEventListener('click', (e) => {
   event.preventDefault()
-  if (!e.target.parentElement.classList.contains("available-room")) {
-    return
-  } else if (e.target.parentElement.classList.contains("available-room")) {
+  console.log(e.target.parentElement.classList)
+  // if (!e.target.parentElement.classList.contains("available-room")) {
+  //   return
+  if (e.target.parentElement.classList.contains("available-room")) {
     bookingConfirmationPage.innerHTML = '';
     showSelectedBooking(e.target.id);
+  } else {
+    return
   };
   hideElement(showAvailableRooms);
   hideElement(filterRoomsBtn);
