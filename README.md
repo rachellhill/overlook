@@ -30,7 +30,7 @@ To access the application locally:
 - Once logged in, navigate to the middle section titled Your Reservations to view all of your reservations, most recent bookings at the top.
 - If you'd like to book another room, select a date in the Book Your Next Stay box to the left and click `Find Available Rooms`
 
-![second part giphy](./src/images/second-part.gif)
+![second part giphy](./src/images/second.gif)
 
 - Browse through the available rooms and filter as needed. Once you find a desired room, click on it to view booking details.
 - If all looks great, click `Confirm Booking` to purchase. This reservation will populate at the top of your reservation list and add to your total cost.
